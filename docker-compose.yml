@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  grc-portal:
+    image: nginx:alpine
+    ports:
+      - "8080:80"
+    volumes:
+      - ./grc:/usr/share/nginx/html
+    environment:
+      - TZ=Asia/Phnom_Penh
+    networks:
+      - cambodia-net
+
+  cloud-simulator:
+    image: python:3.9
+    command: python -m http.server 8000
+    working_dir: /cloud
+    volumes:
+      - ./cloud:/cloud
+    ports:
+      - "8000:8000"
+    networks:
+      - cambodia-net
+
+  data-protection:
+    build: ./data_protection
+    ports:
+      - "5000:5000"
+    environment:
+      - ENCRYPTION_KEY_STORE=local
+      - DATA_LOCALIZATION=Cambodia
+    networks:
+      - cambodia-net
+
+  training-portal:
+    image: php:apache
+    ports:
+      - "8081:80"
+    volumes:
+      - ./training:/var/www/html
+    environment:
+      - LANG=km_KH
+    networks:
+      - cambodia-net
+
+  monitoring:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./docs/grafana:/var/lib/grafana
+    networks:
+      - cambodia-net
+
+networks:
+  cambodia-net:
+    driver: bridge
