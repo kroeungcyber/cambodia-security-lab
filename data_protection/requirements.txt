@@ -1,0 +1,1 @@
+[content of data_protection/requirements.txt]

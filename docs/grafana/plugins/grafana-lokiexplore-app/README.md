@@ -1,0 +1,1 @@
+[content of docs/grafana/plugins/grafana-lokiexplore-app/README.md]
